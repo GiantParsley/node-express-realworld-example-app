@@ -1,0 +1,29 @@
+name: Auto-build issue handler
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  handle_auto_build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check if issue has auto-build label
+        uses: actions/github-script@v7
+        id: check
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const labels = issue.labels.map(l => l.name);
+            const isAuto = labels.includes('auto-build');
+            core.info(`Labels on issue #${issue.number}: ${labels.join(', ')}`);
+            core.setOutput('is_auto', isAuto ? 'true' : 'false');
+
+      - name: Stop if not auto-build
+        if: steps.check.outputs.is_auto != 'true'
+        run: echo "Not an auto-build issue, skipping."
+
+      - name: Placeholder for coding agent
+        if: steps.check.outputs.is_auto == 'true'
+        run: echo "This is where we will call the coding agent for issue #${{ github.event.issue.number }}."
