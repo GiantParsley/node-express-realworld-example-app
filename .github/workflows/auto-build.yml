@@ -36,26 +36,27 @@ jobs:
         if: steps.check.outputs.is_auto == 'true'
         run: |
           echo "This is where we will call the coding agent for issue #${{ github.event.issue.number }}."
-          - name: Comment on issue
-          if: steps.check.outputs.is_auto == 'true'
-          uses: actions/github-script@v7
-          with:
-            script: |
-              const issueNumber = context.payload.issue.number;
-              const body = [
-                "👋 Auto-build workflow triggered for this issue.",
-                "",
-                "In the future, this is where I will call the coding agent to:",
-                "- Read the repo code",
-                "- Implement the /health endpoint",
-                "- Open a pull request automatically",
-                "",
-                "_Workflow run id: " + context.runId + "_"
-              ].join("\n");
-  
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: issueNumber,
-                body
-              });
+
+      - name: Comment on issue
+        if: steps.check.outputs.is_auto == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number;
+            const body = [
+              "👋 Auto-build workflow triggered for this issue.",
+              "",
+              "In the future, this is where I will call the coding agent to:",
+              "- Read the repo code",
+              "- Implement the /health endpoint",
+              "- Open a pull request automatically",
+              "",
+              "_Workflow run id: " + context.runId + "_"
+            ].join("\n");
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body
+            });
