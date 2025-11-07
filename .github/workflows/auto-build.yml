@@ -24,8 +24,15 @@ jobs:
         if: steps.check.outputs.is_auto != 'true'
         run: echo "Not an auto-build issue, skipping."
 
+      - name: Check out repository
+        if: steps.check.outputs.is_auto == 'true'
+        uses: actions/checkout@v4
+
+      - name: List files (sanity check)
+        if: steps.check.outputs.is_auto == 'true'
+        run: ls -R
+
       - name: Placeholder for coding agent
         if: steps.check.outputs.is_auto == 'true'
         run: |
           echo "This is where we will call the coding agent for issue #${{ github.event.issue.number }}."
-
